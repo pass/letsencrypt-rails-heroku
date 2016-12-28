@@ -57,14 +57,14 @@ namespace :letsencrypt do
 
       print "Giving LetsEncrypt some time to verify..."
       # Once you are ready to serve the confirmation request you can proceed.
-      challenge.request_verification # => true
-      challenge.verify_status # => 'pending'
-
-      sleep(3)
-      puts "Done!"
-
+      # challenge.request_verification # => true
+      # challenge.verify_status # => 'pending'
+      while challenge.verify_status == 'pending'
+        sleep(1)
+      end
+      puts "Done with status: #{challenge.verify_status}"
+  
       unless challenge.verify_status == 'valid'
-        puts "Problem verifying challenge."
         abort "Status: #{challenge.verify_status}, Error: #{challenge.error}"
       end
 
